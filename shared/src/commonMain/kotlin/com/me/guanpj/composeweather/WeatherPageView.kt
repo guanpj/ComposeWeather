@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.me.guanpj.composeweather.bean.AllWeatherData
+import com.me.guanpj.composeweather.bean.ForecastWeatherData
 
 @Composable
 fun WeatherPageView() {
@@ -96,7 +97,7 @@ fun WeatherView(data: AllWeatherData) {
             .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         NowWeatherView(data.now)
-        //Spacer(modifier = Modifier.height(16.dp))
-        //ForecastWeatherView(data = data.forecast)
+        Spacer(modifier = Modifier.height(16.dp))
+        ForecastWeatherView(data = data.forecast)
     }
 }

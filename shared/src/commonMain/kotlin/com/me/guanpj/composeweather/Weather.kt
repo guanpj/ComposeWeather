@@ -35,7 +35,11 @@ class Weather {
             })
         }
         install(Logging) {
-            logger = Logger.DEFAULT
+            logger = object : Logger {
+                override fun log(message: String) {
+                    println(message)
+                }
+            }
             level = LogLevel.ALL
         }
     }
@@ -88,7 +92,7 @@ class Weather {
         host = "devapi.qweather.com",
     ).apply {
         encodedPath = "/v7/weather${path}"
-        encodedParameters.append("key", "dd01315398b64840a1765e5674e27f8f")
+        encodedParameters.append("key", "da03f58fe65945c4b26a91307c41f6c6")
         encodedParameters.append("location", location)
     }.buildString()
 

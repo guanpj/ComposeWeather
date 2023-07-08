@@ -19,7 +19,7 @@ class WeatherViewModel {
     private val job = SupervisorJob()
     private val viewModelScope = CoroutineScope(Dispatchers.Main + coroutineExceptionHandler + job)
 
-    fun getWeatherFromNet(location: String = "101210101") {
+    fun getWeatherFromNet(location: String = "101280601") {
         status.value = PageState.Loading
         viewModelScope.launch {
             val result = try {

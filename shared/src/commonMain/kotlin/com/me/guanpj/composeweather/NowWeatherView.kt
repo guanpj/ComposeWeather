@@ -90,7 +90,7 @@ fun NowWeatherView(nowWeatherData: NowWeatherData) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${nowWeatherData.now.windScale}级",
+                    text = "${nowWeatherData.now.windScale} 级",
                     color = Color.Black,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
@@ -107,7 +107,7 @@ fun NowWeatherView(nowWeatherData: NowWeatherData) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${nowWeatherData.now.humidity}%",
+                    text = "${nowWeatherData.now.humidity} %",
                     color = Color.Black,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
@@ -124,7 +124,7 @@ fun NowWeatherView(nowWeatherData: NowWeatherData) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${nowWeatherData.now.pressure}百帕",
+                    text = "${nowWeatherData.now.pressure} 百帕",
                     color = Color.Black,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold

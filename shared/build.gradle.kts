@@ -59,8 +59,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
                 implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
-
-                implementation("com.arkivanov.essenty:lifecycle:1.0.0")
             }
         }
         val commonTest by getting {
