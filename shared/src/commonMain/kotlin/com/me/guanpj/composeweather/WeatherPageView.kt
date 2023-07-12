@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,8 +24,6 @@ import com.me.guanpj.composeweather.bean.AllWeatherData
 
 @Composable
 fun WeatherPageView() {
-    val state: State<WeatherViewModel.PageState> = WeatherViewModel.status
-
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
@@ -61,7 +58,7 @@ fun WeatherPageView() {
                     WeatherViewModel.getWeatherFromNet()
                 })
         }
-        when (val result = state.value) {
+        when (WeatherViewModel.status) {
             WeatherViewModel.PageState.Init -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Text(text = "请选择加载方式", modifier = Modifier.align(Alignment.Center))
@@ -75,12 +72,12 @@ fun WeatherPageView() {
                 }
             }
             is WeatherViewModel.PageState.Success -> {
-                val data = result.data
+                val data = (WeatherViewModel.status as WeatherViewModel.PageState.Success).data
                 WeatherView(data = data)
             }
             is WeatherViewModel.PageState.Fail -> {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    val message = result.message
+                    val message = (WeatherViewModel.status as WeatherViewModel.PageState.Fail).message
                     Text(text = message, modifier = Modifier.align(Alignment.Center))
                 }
             }
