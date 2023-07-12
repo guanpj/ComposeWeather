@@ -1,5 +1,6 @@
 package com.me.guanpj.composeweather
 
+import androidx.compose.runtime.mutableStateOf
 import com.me.guanpj.composeweather.bean.AllWeatherData
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -8,8 +9,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class WeatherViewModel {
+object WeatherViewModel {
     private val weather = Weather()
+    val status = mutableStateOf<PageState>(PageState.Init)
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         exception.printStackTrace()

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,11 +22,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.me.guanpj.composeweather.bean.AllWeatherData
-import com.me.guanpj.composeweather.bean.ForecastWeatherData
 
 @Composable
 fun WeatherPageView() {
-    val viewModel = WeatherViewModel()
+    val state: State<WeatherViewModel.PageState> = WeatherViewModel.status
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -49,7 +49,7 @@ fun WeatherPageView() {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-                    viewModel.getWeatherFromCache()
+                    WeatherViewModel.getWeatherFromCache()
                 })
             Spacer(modifier = Modifier.width(16.dp))
             Text(
@@ -58,10 +58,10 @@ fun WeatherPageView() {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-                    viewModel.getWeatherFromNet()
+                    WeatherViewModel.getWeatherFromNet()
                 })
         }
-        when (status.value) {
+        when (val result = state.value) {
             WeatherViewModel.PageState.Init -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Text(text = "请选择加载方式", modifier = Modifier.align(Alignment.Center))
@@ -75,13 +75,12 @@ fun WeatherPageView() {
                 }
             }
             is WeatherViewModel.PageState.Success -> {
-                val data = (status.value as WeatherViewModel.PageState.Success).data
+                val data = result.data
                 WeatherView(data = data)
             }
             is WeatherViewModel.PageState.Fail -> {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    val message =
-                        (status.value as WeatherViewModel.PageState.Fail).message
+                    val message = result.message
                     Text(text = message, modifier = Modifier.align(Alignment.Center))
                 }
             }
