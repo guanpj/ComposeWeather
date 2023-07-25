@@ -21,7 +21,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "com.me.guanpj.composeweather.main"
+        mainClass = "com.me.guanpj.composeweather.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

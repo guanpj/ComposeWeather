@@ -4,6 +4,7 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 
     plugins {
@@ -14,7 +15,9 @@ pluginManagement {
         kotlin("jvm").version(kotlinVersion)
         kotlin("multiplatform").version(kotlinVersion)
         kotlin("android").version(kotlinVersion)
+        kotlin("plugin.serialization").version(kotlinVersion)
 
+        id("com.android.base").version(agpVersion)
         id("com.android.application").version(agpVersion)
         id("com.android.library").version(agpVersion)
 
@@ -34,3 +37,4 @@ rootProject.name = "ComposeWeather"
 include(":androidApp")
 include(":shared")
 include(":desktopApp")
+include(":webApp")

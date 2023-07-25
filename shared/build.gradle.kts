@@ -1,3 +1,9 @@
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -9,20 +15,41 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    //targetHierarchy.default()
-
-//    android {
-//        compilations.all {
-//            kotlinOptions {
-//                jvmTarget = "1.8"
-//            }
-//        }
-//    }
     android()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
     jvm("desktop")
+    //jvm()
+
+    /*js(IR) {
+        browser()
+    }
+
+    wasm {
+        browser()
+    }*/
+
+    js(IR) {
+        moduleName = "Compose_Weather_Wasm"
+        browser()
+        binaries.executable()
+    }
+    wasm {
+        moduleName = "Compose_Weather_Wasm"
+        browser {
+            commonWebpackConfig {
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).copy(
+                    open = mapOf(
+                        "app" to mapOf(
+                            "name" to "google chrome",
+                        )
+                    ),
+                )
+            }
+        }
+        binaries.executable()
+    }
 
     cocoapods {
         summary = "Some description for the Shared Module"
@@ -100,13 +127,57 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.common)
+                implementation(compose.desktop.currentOs)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
                 implementation("io.ktor:ktor-client-cio:$ktorVersion")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-jvm:${ktorVersion}")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 //implementation("io.ktor:ktor-client-darwin:$ktorVersion")
                 implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelightVersion")
             }
         }
+
+        /*val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("io.ktor:ktor-client-cio:$ktorVersion")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-android:$ktorVersion")
+
+                implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelightVersion")
+            }
+        }*/
+
+        val jsWasmMain by creating {
+            dependsOn(commonMain)
+        }
+
+        val jsMain by getting {
+            dependsOn(jsWasmMain)
+            dependencies {
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                //implementation("com.squareup.sqldelight:web-worker-driver:$sqlDelightVersion")
+                //implementation("app.cash.sqldelight:web-worker-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:web-worker-driver:2.0.0-rc02")
+            }
+        }
+
+        val wasmMain by getting {
+            dependsOn(jsWasmMain)
+        }
+
+        /*val wasmMain by getting {
+            dependsOn(commonMain)
+        }
+        val wasmTest by getting*/
     }
 }
 
@@ -136,4 +207,15 @@ sqldelight {
         packageName = "com.me.guanpj.composeweather.db"
         sourceFolders = listOf("kotlin")
     }
+}
+
+compose.experimental {
+    web.application {}
+}
+
+compose {
+    val composeVersion = project.property("compose.version") as String
+    kotlinCompilerPlugin.set(composeVersion)
+    val kotlinVersion = project.property("kotlin.version") as String
+    kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=$kotlinVersion")
 }

@@ -34,7 +34,7 @@ fun WeatherPageView() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "KMM Weather",
+                text = "Compose Weather",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
