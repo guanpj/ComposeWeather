@@ -11,7 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-object WeatherViewModel {
+class WeatherViewModel {
     private val weather = Weather()
     var status by mutableStateOf<PageState>(PageState.Init)
 
