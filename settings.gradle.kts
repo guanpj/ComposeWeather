@@ -33,3 +33,4 @@ dependencyResolutionManagement {
 rootProject.name = "ComposeWeather"
 include(":androidApp")
 include(":shared")
+include(":desktopApp")
