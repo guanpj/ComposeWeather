@@ -163,6 +163,9 @@ kotlin {
         val jsMain by getting {
             dependsOn(jsWasmMain)
             dependencies {
+                //implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-wasm:1.5.1-wasm0")
+                //implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-wasm:1.6.4-wasm0")
+                //implementation("io.ktor:ktor-client-core-wasm:2.3.1-wasm0")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 //implementation("com.squareup.sqldelight:web-worker-driver:$sqlDelightVersion")
                 //implementation("app.cash.sqldelight:web-worker-driver:$sqlDelightVersion")
