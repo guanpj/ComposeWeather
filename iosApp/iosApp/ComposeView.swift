@@ -15,6 +15,6 @@ struct ComposeView: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> some UIViewController {
-        WeatherPageView_iosKt.MainViewController()
+        Main_iosKt.MainViewController()
     }
 }
