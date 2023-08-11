@@ -44,7 +44,6 @@ class Weather {
     }
 
     private val database = Database()
-
     suspend fun getAllFromDb(): AllWeatherData? {
         val now = getNowWeatherFromDb()
         val forecast = get7DWeatherFromDb()

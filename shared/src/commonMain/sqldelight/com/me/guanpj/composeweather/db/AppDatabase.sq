@@ -7,8 +7,7 @@ insertNowWeather:
 INSERT OR REPLACE INTO NowWeather(id, json) VALUES(1, ?);
 
 selectNowWeather:
-SELECT * FROM NowWeather
-WHERE id = 1;
+SELECT * FROM NowWeather WHERE id = 1;
 
 removeAllNowWeather:
 DELETE FROM NowWeather;

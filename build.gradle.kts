@@ -1,16 +1,17 @@
 plugins {
-    kotlin("multiplatform").apply(false)
-    kotlin("android").apply(false)
     kotlin("jvm").apply(false)
-    id("com.android.application").apply(false)
-    id("com.android.library").apply(false)
     id("org.jetbrains.compose").apply(false)
+
+    id("com.android.application").version("8.0.1").apply(false)
+    id("com.android.library").version("8.0.1").apply(false)
+    kotlin("android").version("1.9.0").apply(false)
+    kotlin("multiplatform").version("1.9.0").apply(false)
 }
 
 buildscript {
-    val sqlDelightVersion = "1.5.5"
+    val sqlDelightVersion = "2.0.0"
     dependencies {
-        classpath("com.squareup.sqldelight:gradle-plugin:$sqlDelightVersion")
+        classpath("app.cash.sqldelight:gradle-plugin:$sqlDelightVersion")
     }
 }
 

@@ -7,10 +7,10 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
-    kotlin("plugin.serialization") version "1.8.20"
+    kotlin("plugin.serialization") version "1.9.0"
     id("com.android.library")
     id("org.jetbrains.compose")
-    id("com.squareup.sqldelight")
+    id("app.cash.sqldelight")
 }
 
 //@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -66,7 +66,7 @@ kotlin {
     }
 
     val ktorVersion = "2.3.0"
-    val sqlDelightVersion = "1.5.5"
+    val sqlDelightVersion = "2.0.0"
 
     sourceSets {
         val commonMain by getting {
@@ -86,7 +86,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
-                implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
             }
         }
         val commonTest by getting {
@@ -95,9 +95,10 @@ kotlin {
             }
         }
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
-                implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
                 implementation("com.blankj:utilcodex:1.31.1")
             }
         }
@@ -112,7 +113,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
-                implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
             }
         }
         val iosX64Test by getting
@@ -125,19 +126,21 @@ kotlin {
             iosSimulatorArm64Test.dependsOn(this)
         }
         val desktopMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
+                implementation("io.ktor:ktor-client-java:$ktorVersion")
                 implementation("io.ktor:ktor-client-cio:$ktorVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-jvm:${ktorVersion}")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 //implementation("io.ktor:ktor-client-darwin:$ktorVersion")
-                implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:sqlite-driver:$sqlDelightVersion")
             }
         }
 
@@ -152,7 +155,7 @@ kotlin {
                 //implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-wasm:1.6.4-wasm0")
                 //implementation("io.ktor:ktor-client-core-wasm:2.3.1-wasm0")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                //implementation("com.squareup.sqldelight:web-worker-driver:$sqlDelightVersion")
+                //implementation("app.cash.sqldelight:web-worker-driver:$sqlDelightVersion")
                 //implementation("app.cash.sqldelight:web-worker-driver:$sqlDelightVersion")
                 implementation("app.cash.sqldelight:web-worker-driver:2.0.0-rc02")
             }
@@ -186,9 +189,10 @@ android {
 }
 
 sqldelight {
-    database("AppDatabase") {
-        packageName = "com.me.guanpj.composeweather.db"
-        sourceFolders = listOf("kotlin")
+    databases {
+        create("AppDatabase") {
+            packageName.set("com.me.guanpj.composeweather.db")
+        }
     }
 }
 
@@ -196,9 +200,9 @@ compose.experimental {
     web.application {}
 }
 
-compose {
+/*compose {
     val composeVersion = project.property("compose.version") as String
     kotlinCompilerPlugin.set(composeVersion)
     val kotlinVersion = project.property("kotlin.version") as String
     kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=$kotlinVersion")
-}
+}*/

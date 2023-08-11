@@ -12,6 +12,7 @@ internal class Database {
         schema = AppDatabase.Schema,
         dbName = "compose_weather.db"
     ))
+
     private val dbQuery = database.appDatabaseQueries
 
     private val json = Json {
@@ -19,14 +20,12 @@ internal class Database {
         isLenient = true
         ignoreUnknownKeys = true
     }
-
     internal fun clearDatabase() {
         dbQuery.transaction {
             dbQuery.removeAllNowWeather()
             dbQuery.removeAllForecastWeather()
         }
     }
-
     internal fun insertNowWeather(data: NowWeatherData) {
         dbQuery.insertNowWeather(json.encodeToString(data))
     }
