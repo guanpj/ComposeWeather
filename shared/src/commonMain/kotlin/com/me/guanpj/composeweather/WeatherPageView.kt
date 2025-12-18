@@ -21,44 +21,54 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.me.guanpj.composeweather.bean.AllWeatherData
+import androidx.compose.foundation.layout.statusBarsPadding
 
 @Composable
 fun WeatherPageView() {
     val viewModel by remember { mutableStateOf(WeatherViewModel()) }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp)
                 .background(Color(0xFF3700B3))
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Compose Weather",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "Cache",
-                color = Color.White,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable {
-                    viewModel.getWeatherFromCache()
-                })
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = "Net",
-                color = Color.White,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable {
-                    viewModel.getWeatherFromNet()
-                })
+            Row(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Compose Weather",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "Cache",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable {
+                        viewModel.getWeatherFromCache()
+                    })
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = "Net",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable {
+                        viewModel.getWeatherFromNet()
+                    })
+            }
         }
         when (viewModel.status) {
             WeatherViewModel.PageState.Init -> {

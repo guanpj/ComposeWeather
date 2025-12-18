@@ -1,7 +1,10 @@
+import org.jetbrains.compose.compose
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.compose")
     kotlin("android")
+    kotlin("plugin.compose") version "2.2.21"
 }
 
 android {
@@ -18,15 +21,12 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = (project.findProperty("compose.compiler.version") as String)
     }
     /*packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-    kotlinOptions {
-        jvmTarget = "11"
     }*/
     buildTypes {
         getByName("release") {
@@ -37,16 +37,26 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.4.3")
-    implementation("androidx.compose.ui:ui-tooling:1.4.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
-    implementation("androidx.compose.foundation:foundation:1.4.3")
-    implementation("androidx.compose.material:material:1.4.3")
-    implementation("androidx.activity:activity-compose:1.7.1")
+
+    implementation(compose.runtime)
+    implementation(compose.ui)
+    implementation(compose.foundation)
+    implementation(compose.material)
+    implementation(compose.components.resources)
+    debugImplementation(compose.uiTooling)
+    // Compose plugin 1.9.1 does not expose uiToolingPreview, so we rely on uiTooling for tooling extras.
+    implementation("androidx.activity:activity-compose:1.9.2")
 
     implementation("com.blankj:utilcodex:1.31.1")
 }

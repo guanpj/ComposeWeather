@@ -51,12 +51,15 @@ fun DailyWeatherView(daily: Daily) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = daily.fxDate, color = Color.Black, fontSize = 14.sp)
-        Spacer(modifier = Modifier.width(30.dp))
+        Text(
+            text = daily.fxDate,
+            color = Color.Black,
+            fontSize = 14.sp,
+            modifier = Modifier.width(100.dp)  // 固定宽度，保证图标对齐
+        )
+        Spacer(modifier = Modifier.width(16.dp))
         Icon(
-            painter = painterResource(
-                res = IconMap[daily.iconDay] ?: "ic_100.png",
-            ),
+            painter = rememberIconPainter(daily.iconDay),
             contentDescription = daily.textDay,
             modifier = Modifier
                 .width(20.dp)

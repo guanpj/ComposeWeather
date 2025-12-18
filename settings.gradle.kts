@@ -37,4 +37,4 @@ rootProject.name = "ComposeWeather"
 include(":androidApp")
 include(":shared")
 include(":desktopApp")
-//include(":webApp")
+include(":web")

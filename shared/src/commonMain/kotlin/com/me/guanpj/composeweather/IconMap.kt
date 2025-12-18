@@ -1,68 +1,98 @@
 package com.me.guanpj.composeweather
 
-object IconMap : MutableMap<String, String> by HashMap() {
-    init {
-        put("100", "ic_100.png")
-        put("101", "ic_101.png")
-        put("102", "ic_102.png")
-        put("103", "ic_103.png")
-        put("104", "ic_104.png")
-        put("150", "ic_150.png")
-        put("151", "ic_151.png")
-        put("152", "ic_152.png")
-        put("153", "ic_153.png")
-        put("300", "ic_300.png")
-        put("301", "ic_301.png")
-        put("302", "ic_302.png")
-        put("303", "ic_303.png")
-        put("304", "ic_304.png")
-        put("305", "ic_305.png")
-        put("306", "ic_306.png")
-        put("307", "ic_307.png")
-        put("308", "ic_308.png")
-        put("309", "ic_309.png")
-        put("310", "ic_310.png")
-        put("311", "ic_311.png")
-        put("312", "ic_312.png")
-        put("313", "ic_313.png")
-        put("314", "ic_314.png")
-        put("315", "ic_315.png")
-        put("316", "ic_316.png")
-        put("317", "ic_317.png")
-        put("318", "ic_318.png")
-        put("350", "ic_350.png")
-        put("351", "ic_351.png")
-        put("399", "ic_399.png")
-        put("400", "ic_400.png")
-        put("401", "ic_401.png")
-        put("402", "ic_402.png")
-        put("403", "ic_403.png")
-        put("404", "ic_404.png")
-        put("405", "ic_405.png")
-        put("406", "ic_406.png")
-        put("407", "ic_407.png")
-        put("408", "ic_408.png")
-        put("409", "ic_409.png")
-        put("410", "ic_410.png")
-        put("456", "ic_456.png")
-        put("457", "ic_457.png")
-        put("499", "ic_499.png")
-        put("500", "ic_500.png")
-        put("501", "ic_501.png")
-        put("502", "ic_502.png")
-        put("503", "ic_503.png")
-        put("504", "ic_504.png")
-        put("507", "ic_507.png")
-        put("508", "ic_508.png")
-        put("509", "ic_509.png")
-        put("510", "ic_510.png")
-        put("511", "ic_511.png")
-        put("512", "ic_512.png")
-        put("513", "ic_513.png")
-        put("514", "ic_514.png")
-        put("515", "ic_515.png")
-        put("900", "ic_900.png")
-        put("901", "ic_901.png")
-        put("999", "ic_999.png")
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
+import composeweather.shared.generated.resources.Res
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.decodeToImageBitmap
+
+object IconMap : Map<String, String> by mapOf(
+    "100" to "ic_100.png",
+    "101" to "ic_101.png",
+    "102" to "ic_102.png",
+    "103" to "ic_103.png",
+    "104" to "ic_104.png",
+    "150" to "ic_150.png",
+    "151" to "ic_151.png",
+    "152" to "ic_152.png",
+    "153" to "ic_153.png",
+    "300" to "ic_300.png",
+    "301" to "ic_301.png",
+    "302" to "ic_302.png",
+    "303" to "ic_303.png",
+    "304" to "ic_304.png",
+    "305" to "ic_305.png",
+    "306" to "ic_306.png",
+    "307" to "ic_307.png",
+    "308" to "ic_308.png",
+    "309" to "ic_309.png",
+    "310" to "ic_310.png",
+    "311" to "ic_311.png",
+    "312" to "ic_312.png",
+    "313" to "ic_313.png",
+    "314" to "ic_314.png",
+    "315" to "ic_315.png",
+    "316" to "ic_316.png",
+    "317" to "ic_317.png",
+    "318" to "ic_318.png",
+    "350" to "ic_350.png",
+    "351" to "ic_351.png",
+    "399" to "ic_399.png",
+    "400" to "ic_400.png",
+    "401" to "ic_401.png",
+    "402" to "ic_402.png",
+    "403" to "ic_403.png",
+    "404" to "ic_404.png",
+    "405" to "ic_405.png",
+    "406" to "ic_406.png",
+    "407" to "ic_407.png",
+    "408" to "ic_408.png",
+    "409" to "ic_409.png",
+    "410" to "ic_410.png",
+    "456" to "ic_456.png",
+    "457" to "ic_457.png",
+    "499" to "ic_499.png",
+    "500" to "ic_500.png",
+    "501" to "ic_501.png",
+    "502" to "ic_502.png",
+    "503" to "ic_503.png",
+    "504" to "ic_504.png",
+    "507" to "ic_507.png",
+    "508" to "ic_508.png",
+    "509" to "ic_509.png",
+    "510" to "ic_510.png",
+    "511" to "ic_511.png",
+    "512" to "ic_512.png",
+    "513" to "ic_513.png",
+    "514" to "ic_514.png",
+    "515" to "ic_515.png",
+    "900" to "ic_900.png",
+    "901" to "ic_901.png",
+    "999" to "ic_999.png",
+)
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun rememberIconPainter(iconCode: String, fallback: String = "100"): Painter {
+    val resourceName = IconMap[iconCode] ?: IconMap[fallback] ?: error("Missing icon resource for $iconCode")
+    var imageBitmap by remember(resourceName) { mutableStateOf<ImageBitmap?>(null) }
+
+    LaunchedEffect(resourceName) {
+        try {
+            val bytes = Res.readBytes("files/$resourceName")
+            imageBitmap = bytes.decodeToImageBitmap()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
+
+    return imageBitmap?.let { BitmapPainter(it) }
+        ?: BitmapPainter(ImageBitmap(1, 1)) // 默认空白图片
 }

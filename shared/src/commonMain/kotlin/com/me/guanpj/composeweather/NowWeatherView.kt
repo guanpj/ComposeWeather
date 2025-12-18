@@ -54,9 +54,7 @@ fun NowWeatherView(nowWeatherData: NowWeatherData) {
             Column {
                 Spacer(modifier = Modifier.height(12.dp))
                 Icon(
-                    painter = painterResource(
-                        res = IconMap[nowWeatherData.now.icon] ?: "ic_100.png"
-                    ),
+                    painter = rememberIconPainter(nowWeatherData.now.icon),
                     contentDescription = nowWeatherData.now.text,
                     modifier = Modifier.size(64.dp),
                     tint = Color.Blue

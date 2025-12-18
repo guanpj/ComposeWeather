@@ -3,11 +3,13 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import org.jetbrains.compose.compose
 
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization") version "2.2.21"
+    kotlin("plugin.compose") version "2.2.21"
     id("com.android.library")
     id("org.jetbrains.compose")
     id("app.cash.sqldelight")
@@ -15,41 +17,18 @@ plugins {
 
 //@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    android()
+    androidTarget()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
     jvm("desktop")
-    //jvm()
 
-    /*js(IR) {
+    js(IR) {
         browser()
     }
 
-    wasm {
-        browser()
-    }*/
-
-    /*js(IR) {
-        moduleName = "Compose_Weather_Wasm"
-        browser()
-        binaries.executable()
-    }
-    wasm {
-        moduleName = "Compose_Weather_Wasm"
-        browser {
-            commonWebpackConfig {
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).copy(
-                    open = mapOf(
-                        "app" to mapOf(
-                            "name" to "google chrome",
-                        )
-                    ),
-                )
-            }
-        }
-        binaries.executable()
-    }*/
+    // wasm 平台目前不需要，所以不启用 wasmJs 目标，避免依赖要求必须覆盖未使用平台。
+    // 如果将来需要 wasm，请在此添加 wasmJs { ... } 并为 wasmMain 提供兼容依赖。
 
     cocoapods {
         summary = "Some description for the Shared Module"
@@ -61,8 +40,6 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-
-        extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
     }
 
     val ktorVersion = "2.3.0"
@@ -85,8 +62,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-
-                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
             }
         }
         val commonTest by getting {
@@ -99,6 +74,7 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
                 implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
                 implementation("com.blankj:utilcodex:1.31.1")
             }
         }
@@ -114,6 +90,7 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
                 implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
             }
         }
         val iosX64Test by getting
@@ -141,29 +118,20 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 //implementation("io.ktor:ktor-client-darwin:$ktorVersion")
                 implementation("app.cash.sqldelight:sqlite-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
             }
-        }
-
-        /*val jsWasmMain by creating {
-            dependsOn(commonMain)
         }
 
         val jsMain by getting {
-            dependsOn(jsWasmMain)
+            dependsOn(commonMain)
             dependencies {
-                //implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-wasm:1.5.1-wasm0")
-                //implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-wasm:1.6.4-wasm0")
-                //implementation("io.ktor:ktor-client-core-wasm:2.3.1-wasm0")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                //implementation("app.cash.sqldelight:web-worker-driver:$sqlDelightVersion")
-                //implementation("app.cash.sqldelight:web-worker-driver:$sqlDelightVersion")
                 implementation("app.cash.sqldelight:web-worker-driver:2.0.0-rc02")
             }
         }
-
-        val wasmMain by getting {
-            dependsOn(jsWasmMain)
-        }*/
+        val jsTest by getting {
+            dependsOn(commonTest)
+        }
     }
 }
 
@@ -180,11 +148,11 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(17)
     }
 }
 
@@ -199,10 +167,3 @@ sqldelight {
 compose.experimental {
     web.application {}
 }
-
-/*compose {
-    val composeVersion = project.property("compose.version") as String
-    kotlinCompilerPlugin.set(composeVersion)
-    val kotlinVersion = project.property("kotlin.version") as String
-    kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=$kotlinVersion")
-}*/
