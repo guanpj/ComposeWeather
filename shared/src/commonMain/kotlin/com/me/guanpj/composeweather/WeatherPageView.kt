@@ -73,7 +73,7 @@ fun WeatherPageView() {
         when (viewModel.status) {
             WeatherViewModel.PageState.Init -> {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    Text(text = "请选择加载方式", modifier = Modifier.align(Alignment.Center))
+                    Text(text = "Please select data source", modifier = Modifier.align(Alignment.Center))
                 }
             }
             WeatherViewModel.PageState.Loading -> {
