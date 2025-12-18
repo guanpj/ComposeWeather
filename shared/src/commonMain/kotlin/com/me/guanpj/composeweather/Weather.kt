@@ -6,6 +6,7 @@ import com.me.guanpj.composeweather.bean.NowWeatherData
 import com.me.guanpj.composeweather.db.Database
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -26,6 +27,10 @@ class Weather {
     }
 
     private val httpClient = HttpClient {
+        install(ContentEncoding) {
+            gzip()
+            deflate()
+        }
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
