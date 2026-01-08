@@ -4,12 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.me.guanpj.composeweather.bean.AllWeatherData
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.TimeoutCancellationException
 
 class WeatherViewModel {
     private val weather = Weather()
@@ -17,7 +19,12 @@ class WeatherViewModel {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         exception.printStackTrace()
-        status = PageState.Fail(exception.message.toString())
+        val errorMessage = when (exception) {
+            is TimeoutCancellationException -> "请求超时，请检查网络连接"
+            is CancellationException -> "请求已取消"
+            else -> exception.message ?: "未知错误"
+        }
+        status = PageState.Fail(errorMessage)
     }
 
     private val job = SupervisorJob()
@@ -29,7 +36,12 @@ class WeatherViewModel {
             val result = try {
                 PageState.Success(weather.getAllFromNet(location))
             } catch (e: Exception) {
-                PageState.Fail(e.message ?: "Unknown error")
+                val errorMessage = when (e) {
+                    is TimeoutCancellationException -> "请求超时，请检查网络连接"
+                    is CancellationException -> "请求已取消"
+                    else -> e.message ?: "未知错误"
+                }
+                PageState.Fail(errorMessage)
             }
             status = result
         }
@@ -42,12 +54,12 @@ class WeatherViewModel {
                 delay(1000)
                 val data = weather.getAllFromDb()
                 if (data == null) {
-                    PageState.Fail("no cache")
+                    PageState.Fail("没有缓存数据")
                 } else {
                     PageState.Success(data)
                 }
             } catch (e: Exception) {
-                PageState.Fail("error")
+                PageState.Fail("获取缓存数据失败")
             }
             status = result
         }

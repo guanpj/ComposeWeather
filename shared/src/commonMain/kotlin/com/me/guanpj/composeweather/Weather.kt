@@ -18,7 +18,9 @@ import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
+import kotlin.time.Duration.Companion.seconds
 
 class Weather {
     companion object {
@@ -75,20 +77,24 @@ class Weather {
     }
 
     suspend fun getNowWeatherFromNet(location: String): NowWeatherData =
-        httpClient
-            .get(assembleUrl(PATH_NOW_WEATHER, location))
-            .body<NowWeatherData>()
-            .also {
-                database.insertNowWeather(it)
-            }
+        withTimeout(30.seconds) {
+            httpClient
+                .get(assembleUrl(PATH_NOW_WEATHER, location))
+                .body<NowWeatherData>()
+                .also {
+                    database.insertNowWeather(it)
+                }
+        }
 
     suspend fun get7DWeatherFromNet(location: String): ForecastWeatherData =
-        httpClient
-            .get(assembleUrl(PATH_WEATHER_FORECAST_7D, location))
-            .body<ForecastWeatherData>()
-            .also {
-                database.insertForecastWeather(it)
-            }
+        withTimeout(30.seconds) {
+            httpClient
+                .get(assembleUrl(PATH_WEATHER_FORECAST_7D, location))
+                .body<ForecastWeatherData>()
+                .also {
+                    database.insertForecastWeather(it)
+                }
+        }
 
     private fun assembleUrl(path: String, location: String): String = URLBuilder(
         protocol = URLProtocol.HTTPS,

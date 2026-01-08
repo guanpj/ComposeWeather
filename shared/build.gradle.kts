@@ -42,7 +42,7 @@ kotlin {
         }
     }
 
-    val ktorVersion = "2.3.0"
+    val ktorVersion = "3.0.0"
     val sqlDelightVersion = "2.0.0"
 
     sourceSets {
@@ -60,9 +60,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-client-encoding:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("io.ktor:ktor-client-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
             }
         }
         val commonTest by getting {
@@ -115,7 +113,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-cio:$ktorVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-jvm:${ktorVersion}")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 //implementation("io.ktor:ktor-client-darwin:$ktorVersion")
                 implementation("app.cash.sqldelight:sqlite-driver:$sqlDelightVersion")
@@ -126,8 +123,12 @@ kotlin {
         val jsMain by getting {
             dependsOn(commonMain)
             dependencies {
+                implementation("io.ktor:ktor-client-js:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("app.cash.sqldelight:web-worker-driver:2.0.0-rc02")
+                implementation("app.cash.sqldelight:web-worker-driver:2.0.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
             }
         }
         val jsTest by getting {

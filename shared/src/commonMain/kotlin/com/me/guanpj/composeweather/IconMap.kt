@@ -89,6 +89,9 @@ fun rememberIconPainter(iconCode: String, fallback: String = "100"): Painter {
             val bytes = Res.readBytes("files/$resourceName")
             imageBitmap = bytes.decodeToImageBitmap()
         } catch (e: Exception) {
+            // Check for cancellation or AbortError
+            if (e is kotlinx.coroutines.CancellationException) throw e
+            if (e.message?.contains("AbortError") == true) return@LaunchedEffect
             e.printStackTrace()
         }
     }
